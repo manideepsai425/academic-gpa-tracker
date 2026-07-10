@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-canvas text-fg;
+  }
+
+  /* Numbers and GPA values throughout the app use the monospace
+     stack, per the brief — this class is applied explicitly wherever
+     a numeric value renders, rather than globally, so headings and
+     prose stay in the sans stack. */
+  .font-numeric {
+    @apply font-mono tabular-nums;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border;
+  }
+}
