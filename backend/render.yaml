@@ -1,0 +1,35 @@
+# Render Blueprint — optional, but lets Render provision the web
+# service and Postgres database from this one file rather than
+# clicking through the dashboard manually. See README.md for the
+# manual (dashboard) steps if you'd rather not use a blueprint.
+databases:
+  - name: gpa-tracker-db
+    plan: free
+    databaseName: gpa_tracker
+    user: gpa_tracker_user
+
+services:
+  - type: web
+    name: gpa-tracker-api
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && alembic upgrade head"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gpa-tracker-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "10080"
+      - key: ENVIRONMENT
+        value: production
+      - key: CORS_ORIGINS
+        # Replace with your actual Vercel URL after the frontend is
+        # deployed — this placeholder will block all cross-origin
+        # requests until updated.
+        value: "https://your-app.vercel.app"
